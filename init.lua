@@ -159,6 +159,9 @@ require("lazy").setup({
 
 	-- "gc" to comment visual regions/lines
 	{ "numToStr/Comment.nvim", opts = {} },
+	{ "mfussenegger/nvim-dap-python", ft = "python", dependencies = {
+		"mfussenegger/nvim-dap",
+	} }, -- DAP for Python
 
 	-- Here is a more advanced example where we pass configuration
 	-- options to `gitsigns.nvim`. This is equivalent to the following Lua:
