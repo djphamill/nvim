@@ -159,9 +159,43 @@ require("lazy").setup({
 
 	-- "gc" to comment visual regions/lines
 	{ "numToStr/Comment.nvim", opts = {} },
-	{ "mfussenegger/nvim-dap-python", ft = "python", dependencies = {
-		"mfussenegger/nvim-dap",
-	} }, -- DAP for Python
+
+	-- DAPing
+	{
+		"rcarriga/nvim-dap-ui",
+		dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+		config = function()
+			local dap = require("dap")
+			local dapui = require("dapui")
+			dapui.setup()
+			dap.listeners.after.event_initialized["dapui_config"] = function()
+				dapui.open()
+			end
+			dap.listeners.before.event_terminated["dapui_config"] = function()
+				dapui.close()
+			end
+			dap.listeners.before.event_exited["dapui_config"] = function()
+				dapui.close()
+			end
+		end,
+	},
+	{ "mfussenegger/nvim-dap" },
+	{
+		"mfussenegger/nvim-dap-python",
+		ft = "python",
+		dependencies = {
+			"mfussenegger/nvim-dap",
+			"rcarriga/nvim-dap-ui",
+		},
+		config = function(_, opts)
+			local path = "~/.local/share/nvim/mason/packages/debugpy/venv/bin/python3"
+			require("dap-python").setup(path)
+			vim.keymap.set("n", "<leader>db", "<cmd> DapToggleBreakpoint <CR>", { desc = "Toggle breakpoint" })
+			vim.keymap.set("n", "<leader>dpr", function()
+				require("dap-python").test_method()
+			end, { desc = "Toggle breakpoint" })
+		end,
+	}, -- DAP for Python
 
 	-- Here is a more advanced example where we pass configuration
 	-- options to `gitsigns.nvim`. This is equivalent to the following Lua:
@@ -335,7 +369,7 @@ require("lazy").setup({
 		"neovim/nvim-lspconfig",
 		dependencies = {
 			-- Automatically install LSPs and related tools to stdpath for Neovim
-			{ "williamboman/mason.nvim", config = true }, -- NOTE: Must be loaded before dependants
+			{ "williamboman/mason.nvim", config = true, opts = { ensure_installed = { "debugpy" } } }, -- NOTE: Must be loaded before dependants
 			"williamboman/mason-lspconfig.nvim",
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 
