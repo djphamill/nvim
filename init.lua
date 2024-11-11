@@ -110,6 +110,37 @@ vim.keymap.set("i", "(", "()<Esc>ha", { desc = "Automatically close bracket" })
 vim.keymap.set("i", "'", "''<Esc>ha", { desc = "Automatically close single quote" })
 vim.keymap.set("i", '"', '""<Esc>ha', { desc = "Automatically close double quote" })
 
+local function writeOrSkip(c)
+	local current_line = vim.api.nvim_get_current_line()
+	local next_position = vim.fn.getcurpos()[3]
+	local next_character = string.sub(current_line, next_position, next_position)
+	if next_character == c then
+		return "<Esc>la"
+	else
+		return c
+	end
+end
+
+vim.keymap.set("i", '"', function()
+	return writeOrSkip('"')
+end, { expr = true, desc = 'Write " unless there is one immediately present' })
+
+vim.keymap.set("i", "'", function()
+	return writeOrSkip("'")
+end, { expr = true, desc = "Write ' unless there is one immediately present" })
+
+vim.keymap.set("i", "}", function()
+	return writeOrSkip("}")
+end, { expr = true, desc = "Write } unless there is one immediately present" })
+
+vim.keymap.set("i", "]", function()
+	return writeOrSkip("]")
+end, { expr = true, desc = "Write ] unless there is one immediately present" })
+
+vim.keymap.set("i", ")", function()
+	return writeOrSkip(")")
+end, { expr = true, desc = "Write ) unless there is one immediately present" })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
