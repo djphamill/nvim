@@ -1,3 +1,8 @@
+Write line numbers so that they appear in the last whitespace space in the first continous whitespace block.
+write a command that gives a list of common commands I might want:
+	* undo tree
+	* linting
+	* how to?
 harpoon
 undoo tree
 python debugger https://www.youtube.com/watch?v=4BnVeOUeZx
