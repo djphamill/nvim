@@ -910,3 +910,4 @@ require("lazy").setup({
 -- vim: ts=2 sts=2 sw=2 et
 
 vim.keymap.set("n", "<leader>==", "i===============================================================<esc>o<esc>")
+vim.api.nvim_create_user_command("AlignColumns", "%!sed -e 's/ | /\\&/g' -e 's/\\t/\\&/g' | column -t -o ' | ' -s '&'", {})
